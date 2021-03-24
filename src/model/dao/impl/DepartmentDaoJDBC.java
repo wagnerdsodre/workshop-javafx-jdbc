@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,25 +25,52 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 	public void insert(Department obj) {
 		PreparedStatement st = null;
 		try {
-			st = conn.prepareStatement("INSERT INTO Department " + "(Name) " + "VALUES " + "(?)");
+			st = conn.prepareStatement(
 
-			st.setInt(1, obj.getId());
+					"INSERT INTO department " +
+
+							"(Name) " +
+
+							"VALUES " +
+
+							"(?)",
+
+					Statement.RETURN_GENERATED_KEYS);
+
+			st.setString(1, obj.getName());
 			int rowsAffected = st.executeUpdate();
 
 			if (rowsAffected > 0) {
+
 				ResultSet rs = st.getGeneratedKeys();
+
 				if (rs.next()) {
+
 					int id = rs.getInt(1);
+
 					obj.setId(id);
+
 				}
-				DB.closeResultSet(rs);
-			} else {
-				throw new DbException("Unexpected error ! No rows affected!");
+
 			}
 
-		} catch (SQLException e) {
+			else {
+
+				throw new DbException("Unexpected error! No rows affected!");
+
+			}
+
+		}
+
+		catch (SQLException e) {
+
 			throw new DbException(e.getMessage());
-		} finally {
+
+		}
+
+		finally {
+
+			DB.closeStatment(st);
 
 		}
 
@@ -104,7 +132,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
 		try {
 
-			st = conn.prepareStatement("SELECT * FROM department ORDER BY Name");
+			st = conn.prepareStatement("SELECT * FROM department ORDER BY id");
 			rs = st.executeQuery();
 
 			List<Department> list = new ArrayList<>();
