@@ -81,20 +81,21 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 		PreparedStatement st = null;
 		try {
 			st = conn.prepareStatement(
-					"UPDATE department " + "SET Id= ?, Name = ?, DepartmentId = ? " + "WHERE " + "id = ?");
+				"UPDATE department " +
+				"SET Name = ? " +
+				"WHERE Id = ?");
 
-			st.setInt(1, obj.getId());
-			st.setString(2, obj.getName());
+			st.setString(1, obj.getName());
+			st.setInt(2, obj.getId());
 
 			st.executeUpdate();
-
-		} catch (SQLException e) {
-			throw new DbException(e.getMessage());
-		} finally {
-			DB.closeStatment(st);
-
 		}
-
+		catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} 
+		finally {
+			DB.closeStatment(st);
+		}
 	}
 
 	@Override
