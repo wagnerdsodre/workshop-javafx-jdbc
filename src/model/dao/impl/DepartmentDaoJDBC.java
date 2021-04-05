@@ -71,7 +71,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 
 		finally {
 
-			DB.closeStatment(st);
+			DB.closeStatement(st);
 
 		}
 
@@ -95,7 +95,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 			throw new DbException(e.getMessage());
 		} 
 		finally {
-			DB.closeStatment(st);
+			DB.closeStatement(st);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 			throw new DbIntegrityException(e.getMessage());
 		} 
 		finally {
-			DB.closeStatment(st);
+			DB.closeStatement(st);
 		}
 	}
 
@@ -158,7 +158,7 @@ public class DepartmentDaoJDBC implements DepartmentDao {
 		}
 
 		finally {
-			DB.closeStatment(st);
+			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
 
