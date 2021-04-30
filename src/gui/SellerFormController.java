@@ -1,9 +1,11 @@
 package gui;
 
 import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -136,17 +138,42 @@ public class SellerFormController implements Initializable {
 	}
 
 	private Seller getFormData() {
-		Seller obj = new Seller();
-		obj.setId(Utils.tryParseToint(txtId.getText()));
+		Seller obj = new Seller();// Objeto com dados do formulário
 
-		// exception instance
+		// exceção
 		ValidationExceptions exception = new ValidationExceptions("Validation Error");
-		// verify exception field
+
+		// Atribuindo o txtId capturado, ao id do objeto
+		obj.setId(Utils.tryParseToint(txtId.getText()));
+		// Data Department
+		// teste se os atibutos estão nulos ou em branco
 		if (txtName.getText() == null || txtName.getText().trim().equals("")) {
-			exception.addErros("name", "field can't be empaty ");
+			exception.addErros("name", "Este Campo não pode ser vazio ");/// erro
 		}
 		obj.setName(txtName.getText());
+
 		// verify exception numbers exceptions
+		if (txtEmail.getText() == null || txtEmail.getText().trim().equals("")) {
+			exception.addErros("email", "Este Campo não pode ser vazio ");/// erro
+		}
+		obj.setEmail(txtEmail.getText());
+
+		if (dpBirthDate.getValue() == null) {
+			exception.addErros("birthDate", "Este Campo não pode ser vazio ");
+		} else {
+			// Pegando a variavel do DatePicker
+			Instant instant = Instant.from(dpBirthDate.getValue().atStartOfDay(ZoneId.systemDefault()));
+			// armazenando no objeto
+			obj.setBirthDate(Date.from(instant));
+		}
+
+		// Salary
+		if (txtBaseSalary.getText() == null || txtBaseSalary.getText().trim().equals("")) {
+			exception.addErros("BaseSalary", "Este Campo não pode ser vazio ");/// erro
+		}
+		obj.setBaseSalary(Utils.tryParseToDouble(txtBaseSalary.getText()));
+		obj.setDepartment(comboBoxDepartment.getValue());
+
 		if (exception.getErros().size() > 0) {
 			// put in method setErrorMessagens
 			throw exception;
@@ -199,11 +226,12 @@ public class SellerFormController implements Initializable {
 
 	private void setErrorMessages(Map<String, String> errors) {
 		// colections names fields
+		       		
 		Set<String> fields = errors.keySet();
-
-		if (fields.contains("name")) {
-			labelErrorName.setText(errors.get("name"));
-		}
+		labelErrorName.setText(fields.contains("name") ? errors.get("name") : "");
+		labelErrorEmail.setText(fields.contains("email") ? errors.get("email") : "");
+		labelErrorBirthDate.setText(fields.contains("birthDate") ? errors.get("birthDate") : "");
+		labelErrorBaseSalary.setText(fields.contains("BaseSalary") ? errors.get("BaseSalary") : "");
 
 	}
 
